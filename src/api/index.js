@@ -1,16 +1,4 @@
-# douban-vue
 
-> A Vue.js project
->
-> 完成:
->
-> 首页列表(滚动到底部加载数据)
->
-> 电影和图书模块的列表、详情(评论的加载更多)
-
-## 豆瓣接口分析
-
-```js
 /* 
     获取数据文件
 */
@@ -81,29 +69,70 @@
 
 */
 
-***注意***
-    由于豆瓣接口做了referer限制所以配置了代理服务器
-	即server文件中的内容(easy)
-```
+// 导入axios
+import axios from '_axios@0.18.0@axios'
+axios.defaults.baseURL = 'http://127.0.0.1:3000/rexxar/api/v2'
+
+// 获取各种类型数据
+export const getTypesData = (type, start, count) => {
+    let url = `/subject_collection/${type}/items?start=${start}&count=${count}`
+    return axios.get(url)
+}
+
+
+/* 
+    电影模块
+*/
+
+// 获取首页数据
+export const getIndexData = (url, data) => {
+    return axios.get(url)
+}
+
+// 获取影院热映数据
+export const getMovieComingData = (url, start, count) => {
+    let path = url + `?start=${start}&count=${count}`
+    return axios.get(path)
+}
+
+// 获取电影详情信息
+export const getDetailData = (url, id) => {
+    let path = url + `/${id}`
+    return axios.get(path)
+}
+
+// 获取详情中的影人
+export const getMoviePeople = (id) => {
+    let url = `/movie/${id}/credits`
+    return axios.get(url)
+}
+
+// 加载详情页中的评论
+export const getDetailComment = (type, id, count = 4, start = 0) => {
+    let url = `/${type}/${id}/interests?count=${count}&start=${start}`
+    return axios.get(url)
+}
+
+/* 
+    图书模块
+*/
+
+// 获取不同类型图书信息
+
+export const getBookData = (url, start, count) => {
+    let path = url + `?start=${start}&count=${count}`
+    return axios.get(path)
+}
+
+/* 
+    广播模块
+*/
+
+export const getBroadcastListData = (id = '') => {
+    let url = `/status/anonymous_timeline?max_id=${id}`
+    return axios.get(url)
+}
 
 
 
-## Build Setup
 
-``` bash
-在运行项目之前需要需先将代理服务器运行(server文件夹)
-
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
